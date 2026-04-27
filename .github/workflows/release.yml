@@ -1,0 +1,124 @@
+name: Release
+run-name: "${{ inputs.package }} - ${{ inputs.version_type }} version bump"
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package to publish"
+        required: true
+        type: choice
+        options:
+          - "@nightstem/tokens"
+          - "@nightstem/ui"
+      version_type:
+        description: "Version bump"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - alpha
+          - beta
+
+concurrency:
+  group: release-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Generate App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: design-system
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.14.0
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Compute bump command and dist-tag
+        id: bump
+        run: |
+          case "${{ inputs.version_type }}" in
+            patch|minor|major)
+              echo "cmd=${{ inputs.version_type }}" >> "$GITHUB_OUTPUT"
+              echo "tag=latest" >> "$GITHUB_OUTPUT"
+              ;;
+            alpha)
+              echo "cmd=prerelease --preid=alpha" >> "$GITHUB_OUTPUT"
+              echo "tag=alpha" >> "$GITHUB_OUTPUT"
+              ;;
+            beta)
+              echo "cmd=prerelease --preid=beta" >> "$GITHUB_OUTPUT"
+              echo "tag=beta" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Resolve package directory
+        id: pkg
+        run: |
+          case "${{ inputs.package }}" in
+            "@nightstem/tokens")
+              echo "dir=packages/tokens" >> "$GITHUB_OUTPUT"
+              ;;
+            "@nightstem/ui")
+              echo "dir=packages/ui" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unknown package: ${{ inputs.package }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Bump version
+        id: version
+        working-directory: ${{ steps.pkg.outputs.dir }}
+        run: |
+          npm version ${{ steps.bump.outputs.cmd }} --no-git-tag-version
+          echo "value=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Refresh lockfile
+        run: pnpm install --lockfile-only
+
+      - name: Commit, tag, and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '${{ steps.pkg.outputs.dir }}/package.json' pnpm-lock.yaml
+          git commit -m 'release: ${{ inputs.package }}@${{ steps.version.outputs.value }}'
+          git tag '${{ inputs.package }}@${{ steps.version.outputs.value }}'
+          git push origin HEAD --follow-tags

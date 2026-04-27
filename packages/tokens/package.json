@@ -1,0 +1,32 @@
+{
+  "name": "@nightstem/tokens",
+  "version": "0.0.1",
+  "description": "Design tokens for the Nightstem design system",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "exports": {
+    "./theme.css": "./src/theme.css",
+    "./fonts.css": "./src/fonts.css",
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nightstem/design-system.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.2.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8"
+  }
+}
