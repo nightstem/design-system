@@ -1,0 +1,21 @@
+name: 'Resolve package'
+description: 'Map a @nightstem/* package name to its workspace directory'
+inputs:
+  package:
+    description: 'Package name (e.g. @nightstem/tokens)'
+    required: true
+outputs:
+  dir:
+    description: 'Workspace path (e.g. packages/tokens)'
+    value: ${{ steps.resolve.outputs.dir }}
+runs:
+  using: composite
+  steps:
+    - id: resolve
+      shell: bash
+      run: |
+        case "${{ inputs.package }}" in
+          "@nightstem/tokens") echo "dir=packages/tokens" >> "$GITHUB_OUTPUT" ;;
+          "@nightstem/ui")     echo "dir=packages/ui"     >> "$GITHUB_OUTPUT" ;;
+          *) echo "Unknown package: ${{ inputs.package }}"; exit 1 ;;
+        esac

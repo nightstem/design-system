@@ -23,16 +23,106 @@ on:
           - beta
 
 concurrency:
-  group: release-${{ github.workflow }}
+  group: release
   cancel-in-progress: false
 
+permissions: {}
+
 jobs:
-  release:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify branch is main
+        run: |
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+            echo "::error::Releases can only be run from the main branch (got: ${{ github.ref }})"
+            exit 1
+          fi
+
+  lint:
+    if: false
+    needs: guard
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Lint
+        run: pnpm lint
 
+  typecheck:
+    if: false
+    needs: guard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Typecheck
+        run: pnpm typecheck
+
+  test:
+    if: false
+    needs: guard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Test
+        run: pnpm test
+
+  format:
+    if: false
+    needs: guard
+    name: format check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Format check
+        run: pnpm format:check
+
+  build:
+    needs: guard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Resolve package dir
+        id: target
+        uses: ./.github/actions/resolve-package
+        with:
+          package: ${{ inputs.package }}
+
+      - name: Build
+        run: pnpm --filter '${{ inputs.package }}' --if-present build
+
+      - name: Upload dist artifact
+        if: "${{ inputs.package == '@nightstem/ui' }}"
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ${{ steps.target.outputs.dir }}/dist
+          if-no-files-found: error
+
+  version:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      dir: ${{ steps.target.outputs.dir }}
+      tag: ${{ steps.bump-info.outputs.tag }}
+      version: ${{ steps.bump.outputs.version }}
     steps:
       - name: Generate App Token
         id: generate-token
@@ -47,69 +137,29 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: ./.github/actions/setup
 
-      - uses: actions/setup-node@v4
+      - name: Resolve package dir
+        id: target
+        uses: ./.github/actions/resolve-package
         with:
-          node-version: 22.14.0
-          cache: pnpm
-          registry-url: "https://registry.npmjs.org"
+          package: ${{ inputs.package }}
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
-
-      - name: Compute bump command and dist-tag
-        id: bump
+      - name: Resolve version bump
+        id: bump-info
         run: |
           case "${{ inputs.version_type }}" in
-            patch|minor|major)
-              echo "cmd=${{ inputs.version_type }}" >> "$GITHUB_OUTPUT"
-              echo "tag=latest" >> "$GITHUB_OUTPUT"
-              ;;
-            alpha)
-              echo "cmd=prerelease --preid=alpha" >> "$GITHUB_OUTPUT"
-              echo "tag=alpha" >> "$GITHUB_OUTPUT"
-              ;;
-            beta)
-              echo "cmd=prerelease --preid=beta" >> "$GITHUB_OUTPUT"
-              echo "tag=beta" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
-
-      - name: Resolve package directory
-        id: pkg
-        run: |
-          case "${{ inputs.package }}" in
-            "@nightstem/tokens")
-              echo "dir=packages/tokens" >> "$GITHUB_OUTPUT"
-              ;;
-            "@nightstem/ui")
-              echo "dir=packages/ui" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "Unknown package: ${{ inputs.package }}"
-              exit 1
-              ;;
+            patch|minor|major) echo "cmd=${{ inputs.version_type }}"  >> "$GITHUB_OUTPUT"; echo "tag=latest" >> "$GITHUB_OUTPUT" ;;
+            alpha)             echo "cmd=prerelease --preid=alpha"    >> "$GITHUB_OUTPUT"; echo "tag=alpha"  >> "$GITHUB_OUTPUT" ;;
+            beta)              echo "cmd=prerelease --preid=beta"     >> "$GITHUB_OUTPUT"; echo "tag=beta"   >> "$GITHUB_OUTPUT" ;;
           esac
 
       - name: Bump version
-        id: version
-        working-directory: ${{ steps.pkg.outputs.dir }}
+        id: bump
+        working-directory: ${{ steps.target.outputs.dir }}
         run: |
-          npm version ${{ steps.bump.outputs.cmd }} --no-git-tag-version
-          echo "value=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          npm version ${{ steps.bump-info.outputs.cmd }} --no-git-tag-version
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Refresh lockfile
         run: pnpm install --lockfile-only
@@ -118,6 +168,47 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add '${{ steps.pkg.outputs.dir }}/package.json' pnpm-lock.yaml
-          git commit -m 'release: ${{ inputs.package }}@${{ steps.version.outputs.value }}'
+          git add '${{ steps.target.outputs.dir }}/package.json' pnpm-lock.yaml
+          git commit -m 'release: ${{ inputs.package }}@${{ steps.bump.outputs.version }}'
           git push origin HEAD
+
+  publish:
+    needs: version
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - uses: ./.github/actions/setup
+
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Download dist artifact
+        if: "${{ inputs.package == '@nightstem/ui' }}"
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ${{ needs.version.outputs.dir }}/dist
+
+      - name: Publish to npm
+        working-directory: ${{ needs.version.outputs.dir }}
+        run: npm publish --access public --tag ${{ needs.version.outputs.tag }}
+
+      - name: Tag release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          TAG='${{ inputs.package }}@${{ needs.version.outputs.version }}'
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping"
+          else
+            git tag -a "$TAG" -m "release: $TAG"
+            git push origin "$TAG"
+          fi
