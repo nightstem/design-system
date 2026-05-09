@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
-import cn from '@/utils/classnames';
+import { cn } from '@nightstem/utils';
 
 import type {
   ButtonColor,

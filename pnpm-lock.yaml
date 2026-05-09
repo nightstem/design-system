@@ -135,18 +135,15 @@ importers:
 
   packages/ui:
     dependencies:
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
+      '@nightstem/utils':
+        specifier: workspace:*
+        version: link:../utils
       react:
         specifier: ^19.2.5
         version: 19.2.5
       react-dom:
         specifier: ^19.2.5
         version: 19.2.5(react@19.2.5)
-      tailwind-merge:
-        specifier: ^3.5.0
-        version: 3.5.0
     devDependencies:
       '@nightstem/tokens':
         specifier: workspace:*
@@ -178,6 +175,28 @@ importers:
       vitest-axe:
         specifier: 1.0.0-pre.5
         version: 1.0.0-pre.5(vitest@4.1.5)
+
+  packages/utils:
+    dependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      tailwind-merge:
+        specifier: ^3.5.0
+        version: 3.5.0
+    devDependencies:
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.10(@types/node@25.6.2)(jiti@2.7.0)
+      vite-plugin-dts:
+        specifier: ^5.0.0
+        version: 5.0.0(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.2)(jiti@2.7.0))
 
 packages:
 

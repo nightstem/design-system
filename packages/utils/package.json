@@ -1,7 +1,7 @@
 {
-  "name": "@nightstem/ui",
-  "version": "0.0.2-alpha.1",
-  "description": "React UI components for the Nightstem design system",
+  "name": "@nightstem/utils",
+  "version": "0.0.1-alpha.0",
+  "description": "Framework-agnostic utilities for the Nightstem design system",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -34,32 +34,16 @@
     "lint": "eslint .",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
-    "storybook": "pnpm --filter @nightstem/storybook storybook",
     "clean": "rimraf dist"
   },
-  "peerDependencies": {
-    "@nightstem/tokens": "workspace:*",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
-  },
-  "peerDependenciesMeta": {
-    "@nightstem/tokens": {
-      "optional": true
-    }
-  },
   "dependencies": {
-    "@nightstem/utils": "workspace:*"
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "@nightstem/tokens": "workspace:*",
-    "@storybook/react": "^10.3.6",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^6.0.1",
     "rimraf": "^6.0.1",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
-    "vite-plugin-dts": "^5.0.0",
-    "vitest-axe": "1.0.0-pre.5"
+    "vite-plugin-dts": "^5.0.0"
   }
 }

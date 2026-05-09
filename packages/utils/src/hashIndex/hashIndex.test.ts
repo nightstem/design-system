@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { hashIndex } from '@/utils/hashIndex';
+import { hashIndex } from '@/hashIndex';
 
 describe('edge cases', () => {
   it('returns 0 when max is 0', () => {

@@ -1,20 +1,13 @@
-import react from '@vitejs/plugin-react';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
-    react(),
     dts({
       entryRoot: 'src',
-      include: ['src/**/*.ts', 'src/**/*.tsx'],
-      exclude: [
-        'src/**/*.test.ts',
-        'src/**/*.test.tsx',
-        'src/**/*.stories.ts',
-        'src/**/*.stories.tsx',
-      ],
+      include: ['src/**/*.ts'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.stories.ts'],
       tsconfigPath: './tsconfig.build.json',
       rollupTypes: true,
       insertTypesEntry: true,
@@ -33,7 +26,7 @@ export default defineConfig({
       fileName: () => 'index.js',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', '@nightstem/utils'],
+      external: ['clsx', 'tailwind-merge'],
     },
   },
 });

@@ -11,6 +11,7 @@ on:
         options:
           - '@nightstem/tokens'
           - '@nightstem/ui'
+          - '@nightstem/utils'
       version_type:
         description: 'Version bump'
         required: true
@@ -103,7 +104,7 @@ jobs:
         run: pnpm --filter '${{ inputs.package }}' --if-present build
 
       - name: Upload dist artifact
-        if: "${{ inputs.package == '@nightstem/ui' }}"
+        if: "${{ inputs.package == '@nightstem/ui' || inputs.package == '@nightstem/utils' }}"
         uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -187,7 +188,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Download dist artifact
-        if: "${{ inputs.package == '@nightstem/ui' }}"
+        if: "${{ inputs.package == '@nightstem/ui' || inputs.package == '@nightstem/utils' }}"
         uses: actions/download-artifact@v4
         with:
           name: dist

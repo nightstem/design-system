@@ -1,6 +1,6 @@
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-import cn from '@/utils/classnames';
+import { cn } from '@nightstem/utils';
 
 export type KbdProps = DetailedHTMLProps<
   HTMLAttributes<HTMLElement>,

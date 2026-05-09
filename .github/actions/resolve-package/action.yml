@@ -17,5 +17,6 @@ runs:
         case "${{ inputs.package }}" in
           "@nightstem/tokens") echo "dir=packages/tokens" >> "$GITHUB_OUTPUT" ;;
           "@nightstem/ui")     echo "dir=packages/ui"     >> "$GITHUB_OUTPUT" ;;
+          "@nightstem/utils")  echo "dir=packages/utils"  >> "$GITHUB_OUTPUT" ;;
           *) echo "Unknown package: ${{ inputs.package }}"; exit 1 ;;
         esac

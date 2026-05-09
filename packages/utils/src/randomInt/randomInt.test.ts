@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { randomInt } from '@/utils/randomInt';
+import { randomInt } from '@/randomInt';
 
 const mockGetRandomValues = vi.fn<(buf: Uint32Array) => Uint32Array>();
 
