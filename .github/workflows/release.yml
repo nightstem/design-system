@@ -193,8 +193,8 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      - name: Upgrade npm
-        run: npm install -g npm@latest
+      - name: Upgrade pnpm
+        run: npm install -g pnpm@latest
 
       - name: Download dist artifact
         if: "${{ inputs.package == '@nightstem/ui' || inputs.package == '@nightstem/utils' }}"
@@ -205,7 +205,7 @@ jobs:
 
       - name: Publish to npm
         working-directory: ${{ needs.version.outputs.dir }}
-        run: npm publish --access public --tag ${{ needs.version.outputs.tag }}
+        run: pnpm publish --access public --tag ${{ needs.version.outputs.tag }} --no-git-checks
 
       - name: Tag release
         run: |
