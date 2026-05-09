@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../../packages/ui/src/*"]
+    },
+    "types": ["node", "vite/client"]
+  },
+  "include": [".storybook/**/*", "../../packages/*/src/**/*"],
+  "exclude": [
+    "../../packages/*/src/**/*.test.ts",
+    "../../packages/*/src/**/*.test.tsx",
+    "node_modules"
+  ]
+}

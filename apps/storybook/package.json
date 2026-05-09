@@ -1,0 +1,30 @@
+{
+  "name": "@nightstem/storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build": "storybook build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown"
+  },
+  "dependencies": {
+    "@nightstem/tokens": "workspace:*",
+    "@nightstem/ui": "workspace:*",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "^10.3.6",
+    "@tailwindcss/vite": "^4.2.0",
+    "@types/node": "^25.6.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "storybook": "^10.3.6",
+    "tailwindcss": "^4.2.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
+  }
+}
