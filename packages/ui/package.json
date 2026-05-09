@@ -1,6 +1,6 @@
 {
   "name": "@nightstem/ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React UI components for the Nightstem design system",
   "license": "MIT",
   "type": "module",
