@@ -135,6 +135,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@nightstem/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       '@nightstem/utils':
         specifier: workspace:*
         version: link:../utils
@@ -145,9 +148,6 @@ importers:
         specifier: ^19.2.5
         version: 19.2.5(react@19.2.5)
     devDependencies:
-      '@nightstem/tokens':
-        specifier: workspace:*
-        version: link:../tokens
       '@storybook/react':
         specifier: ^10.3.6
         version: 10.3.6(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@6.0.3)
