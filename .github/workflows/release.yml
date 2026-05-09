@@ -48,6 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Build workspace dependencies
+        run: pnpm --filter '@nightstem/ui^...' build
       - name: Lint
         run: pnpm lint
 
@@ -59,6 +61,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Build workspace dependencies
+        run: pnpm --filter '@nightstem/ui^...' build
       - name: Typecheck
         run: pnpm typecheck
 
@@ -70,6 +74,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Build workspace dependencies
+        run: pnpm --filter '@nightstem/ui^...' build
       - name: Test
         run: pnpm coverage
 
@@ -99,6 +105,9 @@ jobs:
         uses: ./.github/actions/resolve-package
         with:
           package: ${{ inputs.package }}
+
+      - name: Build workspace dependencies
+        run: pnpm --filter '${{ inputs.package }}^...' build
 
       - name: Build
         run: pnpm --filter '${{ inputs.package }}' --if-present build

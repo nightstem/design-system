@@ -38,20 +38,14 @@
     "clean": "rimraf dist"
   },
   "peerDependencies": {
-    "@nightstem/tokens": "workspace:*",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
-  "peerDependenciesMeta": {
-    "@nightstem/tokens": {
-      "optional": true
-    }
-  },
   "dependencies": {
+    "@nightstem/tokens": "workspace:*",
     "@nightstem/utils": "workspace:*"
   },
   "devDependencies": {
-    "@nightstem/tokens": "workspace:*",
     "@storybook/react": "^10.3.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
