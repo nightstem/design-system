@@ -1,6 +1,6 @@
 {
   "name": "@nightstem/utils",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "Framework-agnostic utilities for the Nightstem design system",
   "license": "MIT",
   "type": "module",
