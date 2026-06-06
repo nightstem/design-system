@@ -1,5 +1,7 @@
 # @nightstem/ui
 
+[![npm](https://img.shields.io/npm/v/@nightstem/ui)](https://www.npmjs.com/package/@nightstem/ui)
+
 React UI primitives for the Nightstem design system.
 
 ## Install

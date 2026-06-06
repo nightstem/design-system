@@ -1,5 +1,7 @@
 # @nightstem/tokens
 
+[![npm](https://img.shields.io/npm/v/@nightstem/tokens)](https://www.npmjs.com/package/@nightstem/tokens)
+
 Design tokens for the Nightstem design system — colors, typography, spacing, and layout utilities built on Tailwind CSS v4.
 
 ## Requirements
