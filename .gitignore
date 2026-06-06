@@ -4,3 +4,10 @@
 **/*.log
 .DS_Store
 .npmrc
+**/*.local.*
+**/*.local 
+
+# Claude local settings and memory files
+**/.claude
+**/.claude/settings.local.json
+**/.claude/memory
