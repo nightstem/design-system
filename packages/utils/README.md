@@ -1,5 +1,7 @@
 # @nightstem/utils
 
+[![npm](https://img.shields.io/npm/v/@nightstem/utils)](https://www.npmjs.com/package/@nightstem/utils)
+
 Framework-agnostic utilities for the Nightstem design system.
 
 ## Installation
