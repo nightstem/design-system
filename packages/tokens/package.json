@@ -1,6 +1,6 @@
 {
   "name": "@nightstem/tokens",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Design tokens for the Nightstem design system",
   "license": "MIT",
   "type": "module",
