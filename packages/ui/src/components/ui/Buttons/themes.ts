@@ -11,12 +11,12 @@ export const THEME_SIZE: Record<ButtonSize, string> = {
   lg: 'text-lg px-5 py-2.5',
   md: 'text-base px-4 py-2',
   sm: 'text-sm px-3 py-1.5',
-} as const;
+};
 
 export const THEME_SHAPE: Record<ButtonShape, string> = {
   circle: 'rounded-full',
   square: 'rounded-md',
-} as const;
+};
 
 export const THEME_VARIANT: Record<
   ButtonVariant,
@@ -102,4 +102,4 @@ export const THEME_VARIANT: Record<
       'disabled:opacity-60 disabled:hover:text-neutral-400 disabled:hover:bg-transparent disabled:active:bg-transparent',
     ),
   },
-} as const;
+};

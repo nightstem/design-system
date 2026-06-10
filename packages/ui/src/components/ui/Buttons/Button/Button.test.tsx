@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 
@@ -19,6 +20,15 @@ const variants = Object.values(BUTTON_VARIANT) as ButtonVariant[];
 const colors = Object.values(BUTTON_COLORS) as ButtonColor[];
 const sizes = Object.values(BUTTON_SIZE) as ButtonSize[];
 const shapes = Object.values(BUTTON_SHAPE) as ButtonShape[];
+
+describe('Ref forwarding', () => {
+  it('forwards ref to the underlying button element', () => {
+    const ref = createRef<HTMLButtonElement>();
+    render(<Button ref={ref}>Button</Button>);
+
+    expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+  });
+});
 
 describe('Snapshots', () => {
   it.each(

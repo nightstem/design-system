@@ -1,6 +1,6 @@
 import {
   createElement,
-  type AnchorHTMLAttributes,
+  type ComponentProps,
   type ElementType,
 } from 'react';
 
@@ -25,7 +25,7 @@ import {
   THEME_VARIANT,
 } from '@/components/ui/Buttons/themes';
 
-export type LinkButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+export type LinkButtonProps = ComponentProps<'a'> & {
   /** Element or component used to render the link. Defaults to a plain <a>. Pass next/link, react-router Link, etc. */
   linkComponent?: ElementType;
   size?: ButtonSize;
