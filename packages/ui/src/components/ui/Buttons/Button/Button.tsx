@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import type { ComponentProps } from 'react';
 
 import { cn } from '@nightstem/utils';
 
@@ -21,10 +21,7 @@ import {
   THEME_VARIANT,
 } from '@/components/ui/Buttons/themes';
 
-export type ButtonProps = DetailedHTMLProps<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
-> & {
+export type ButtonProps = ComponentProps<'button'> & {
   size?: ButtonSize;
   color?: ButtonColor;
   shape?: ButtonShape;
