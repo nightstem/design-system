@@ -1,8 +1,4 @@
-import {
-  createElement,
-  type ComponentProps,
-  type ElementType,
-} from 'react';
+import { createElement, type ComponentProps, type ElementType } from 'react';
 
 import { cn } from '@nightstem/utils';
 

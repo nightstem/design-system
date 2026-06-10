@@ -24,7 +24,11 @@ const shapes = Object.values(BUTTON_SHAPE) as ButtonShape[];
 describe('Ref forwarding', () => {
   it('forwards ref to the underlying anchor element', () => {
     const ref = createRef<HTMLAnchorElement>();
-    render(<LinkButton ref={ref} href="#">Link</LinkButton>);
+    render(
+      <LinkButton ref={ref} href="#">
+        Link
+      </LinkButton>,
+    );
 
     expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
   });
