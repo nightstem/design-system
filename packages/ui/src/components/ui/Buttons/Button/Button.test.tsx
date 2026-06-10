@@ -25,6 +25,7 @@ describe('Ref forwarding', () => {
   it('forwards ref to the underlying button element', () => {
     const ref = createRef<HTMLButtonElement>();
     render(<Button ref={ref}>Button</Button>);
+
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
 });
